@@ -100,6 +100,36 @@
                 <!-- for unit test -->
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            **/*IntegrationTest
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- for continuous integration -->
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <includes>
+                        <include>
+                            **/*IntegrationTest
+                        </include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!--flyway plugin-->
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>5.2.4</version>
+                <configuration>
+                    <user>root</user>
+                    <password>123456</password>
+                    <url>jdbc:mysql://localhost:3306/xdml</url>
+                </configuration>
             </plugin>
         </plugins>
     </build>
