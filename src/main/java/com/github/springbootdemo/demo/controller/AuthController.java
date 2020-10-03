@@ -1,5 +1,6 @@
 package com.github.springbootdemo.demo.controller;
 
+import com.github.springbootdemo.demo.entity.LoginResult;
 import com.github.springbootdemo.demo.entity.Result;
 import com.github.springbootdemo.demo.entity.User;
 import com.github.springbootdemo.demo.service.UserService;
@@ -39,9 +40,9 @@ public class AuthController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loggedInUser = userService.getUserByUsername(authentication == null ? null : authentication.getName());
         if (loggedInUser == null) {
-            return Result.failure("用户没有登录");
+            return LoginResult.failure("用户没有登录");
         }
-        return Result.success("登录成功",true,loggedInUser);
+        return LoginResult.success("登录成功",loggedInUser);
     }
 
     // logout
@@ -51,10 +52,10 @@ public class AuthController {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User loggedInUser = userService.getUserByUsername(userName);
         if (loggedInUser == null) {
-            return Result.failure("用户尚未登录");
+            return LoginResult.failure("用户尚未登录");
         } else {
             SecurityContextHolder.clearContext();
-            return Result.success("注销成功",false,null);
+            return LoginResult.success("注销成功",false);
         }
     }
 
@@ -66,17 +67,17 @@ public class AuthController {
         String password = usernameAndPasswordJson.get("password");
 
         if (username.length() < 1 || username.length() > 15) {
-            return Result.failure("invalid  username");
+            return LoginResult.failure("invalid  username");
         }
         if (password.length() < 6 || password.length() > 16) {
-            return Result.failure("invalid password");
+            return LoginResult.failure("invalid password");
         }
         try {
             userService.save(username, password);
         } catch (DuplicateKeyException e) {
-            return Result.failure("user already exists");
+            return LoginResult.failure("user already exists");
         }
-        return Result.success("success",false,userService.getUserByUsername(username));
+        return LoginResult.success("success",false);
     }
 
     //login
@@ -89,7 +90,7 @@ public class AuthController {
         try {
             userDetails = userService.loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
-            return Result.failure("用户不存在");
+            return LoginResult.failure("用户不存在");
         }
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
         // 鉴权：你要登陆论坛，输入用户名张三，密码1234，密码正确，证明你张三确实是张三，这就是 authentication
@@ -100,9 +101,9 @@ public class AuthController {
             // Cookie
             SecurityContextHolder.getContext().setAuthentication(token);
             User loggedInUser = userService.getUserByUsername(username);
-            return Result.success("登录成功",true,loggedInUser);
+            return LoginResult.success("登录成功",loggedInUser);
         } catch (BadCredentialsException e) {
-            return Result.failure("密码不正确");
+            return LoginResult.failure("密码不正确");
         }
     }
 }

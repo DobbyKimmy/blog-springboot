@@ -1,7 +1,7 @@
 package com.github.springbootdemo.demo.service;
 
 import com.github.springbootdemo.demo.entity.User;
-import com.github.springbootdemo.demo.mapper.UserMapper;
+import com.github.springbootdemo.demo.dao.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
